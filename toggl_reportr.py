@@ -109,6 +109,39 @@ def duration_to_timedelta(duration):
     return datetime.timedelta(hours=int(h), minutes=int(m), seconds=int(s) )
 
 
+def string_to_date(yyyymmdd):
+    try:
+        year = int(yyyymmdd[0:4])
+        month = int(yyyymmdd[4:6])
+        day = int(yyyymmdd[6:])
+    except ValueError:
+        sys.exit('Invalid date format: {0}'.format(yyyymmdd))
+
+    return datetime.date(year, month, day)
+
+
+def parse_span(string_date):
+    # Format:  YYYYMMDD[-YYYYMMDD]
+    pieces = string_date.split('-')
+    
+    if len(pieces) == 0:
+        # No start date specified.  Nothing to do.
+        return (None, None)
+
+    # At least one element in pieces
+    start = string_to_date(pieces[0])
+    
+    try:
+        end = string_to_date(pieces[1])
+    except IndexError:
+        end = datetime.date.today()
+
+    if start > end:
+        raise ValueError('Start date can not be after end date')
+        
+    return (start, end)
+
+
 def main():
 
     #TODO: Parse comma seperated lists instead of supplying argument repeatidly
