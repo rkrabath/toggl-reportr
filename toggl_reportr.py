@@ -27,18 +27,13 @@ class Reporter(object):
             'sortDirection': 'asc',
             'sortBy': 'date',
             'page': '1',
-            'description': '',
-            'until': datetime.date.today(),
-            'period': 'thisWeek',
             'with_total_currencies': '1',
             'subgrouping': 'time_entries',
             'order_field': 'date',
             'order_desc': 'off',
             'distinct_rates': 'Off',
-            'workspace_id': '231285',
             'bars_count': '31',
             'subgrouping_ids': 'true',
-            'bookmark_token': '',
             'date_format': 'MM%2FDD%2FYYYY',
             'user_agent': 'toggl-reportr ryan@krabath.net',
         }
@@ -48,6 +43,7 @@ class Reporter(object):
         url = "{0}{1}".format(self.reports_api, endpoint)
         params = self.default_params
         params.update(extra_params)
+        params['workspace_id'] = self.workspace
         response = requests.get(url, params=params, auth=self.api_auth, stream=True)
         if response.status_code != 200:
             raise ValueError("Status code indicates error: " + str(response.status_code) + "\n" + response.text)
@@ -67,6 +63,7 @@ class Reporter(object):
 
 
     def tags_report(self, params):
+        #TODO: Make this not ugly
         # Initialize 
         return_value = ""
         total_time = duration_to_timedelta('00:00:00')
