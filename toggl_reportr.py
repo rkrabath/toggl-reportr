@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 import csv
 import requests
 import argparse
@@ -79,7 +80,7 @@ class Reporter(object):
             time = duration_to_timedelta(line['Duration'])
             total_time += time
             entry_tags = [x.strip().lower() for x in line['Tags'].split(',')]
-            for tag in args.tag:
+            for tag in params['tags']:
                 if tag.lower() in entry_tags:
                     report[tag] += time
 
@@ -92,7 +93,7 @@ class Reporter(object):
                 percent = duration.total_seconds()/total_time.total_seconds() * 100
             except ZeroDivisionError:
                 percent = 0.0
-            return_value += "{tag:10}  {duration} ({percent:.2f}%)\n".format(tag=tag+':', duration=duration, percent=percent)
+            return_value += "{tag:10}  {duration:>9} ({percent:.2f}%)\n".format(tag=tag+':', duration=duration, percent=percent)
             #TODO: Total
 
         return return_value
