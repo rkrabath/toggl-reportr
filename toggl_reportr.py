@@ -150,7 +150,7 @@ def main():
     parser.add_argument('--list-users', action='store_true')
     parser.add_argument('--report', action='store_true')
     parser.add_argument('-t', '--tag', action='append')
-    parser.add_argument('-s', '--span')
+    parser.add_argument('-s', '--span', help="Format: YYYYMMDD[-YYYYMMDD]")
 
     args = parser.parse_args()
     reporter = Reporter()
@@ -161,9 +161,10 @@ def main():
         params['user_ids'] = args.user
 
     if args.span:
-        params['since'] = datetime.date.today() - datetime.timedelta(days=int(args.span))
+        params['since'], params['until'] = parse_span(args.span)
     else:
         params['since'] = datetime.date.today()
+        params['until'] = datetime.date.today()
 
     if args.tag:
         params['tags'] = args.tag
