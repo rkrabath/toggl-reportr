@@ -11,7 +11,7 @@ import ConfigParser
 class Reporter(object):
     def __init__(self):
         self.reports_api = 'https://toggl.com/reports/api/v2/details.csv'
-        self.tracking_api = 'https://toggl.com/api/v8/'
+        self.tracker_api = 'https://toggl.com/api/v8/'
 
         config = ConfigParser.ConfigParser()
         config.read('.togglrc')
@@ -52,7 +52,7 @@ class Reporter(object):
         return reader
 
 
-    def get_tracker_data(self, endpoint, terms):
+    def get_tracker_data(self, endpoint, extra_params={}):
         url = "{0}{1}".format(self.tracker_api, endpoint)
         params = self.default_params
         params.update(extra_params)
